@@ -28,6 +28,7 @@
 
 NSDate *lastVolumeDown;
 UIView *splash;
+BOOL disablenotifications;
 
 void blocktouches() {
     //NSLog(@"PHOTOLOCK: Notification called");
@@ -96,6 +97,17 @@ void blocktouches() {
 }
 %end
 
+%group notifications
+%hook BBServer
+-(void)publishBulletin:(id)arg1 destinations:(unsigned long long)arg2 {
+  if (splash.superview == nil) {
+    %orig;
+  }
+}
+%end
+%end
+
+
 @implementation ScreenFreezeActivatorListener
 -(void)activator:(LAActivator *)activator receiveEvent:(LAEvent *)event {
   blocktouches();
@@ -120,3 +132,12 @@ void blocktouches() {
 	return @"ScreenFreeze";
 }
 @end
+
+%ctor {
+	NSMutableDictionary *prefs = [NSMutableDictionary dictionaryWithContentsOfFile:@"/User/Library/Preferences/com.greg0109.screenfreezeprefs.plist"];
+	disablenotifications = prefs[@"disablenotifications"] ? [prefs[@"disablenotifications"] boolValue] : NO;
+  %init();
+  if (disablenotifications) {
+    %init(notifications);
+  }
+}

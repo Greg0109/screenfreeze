@@ -29,6 +29,7 @@
 
 NSDate *lastVolumeDown;
 UIView *splash;
+BOOL disablenotifications;
 
 void blocktouches() {
     
@@ -80,10 +81,10 @@ void blocktouches() {
 #define _LOGOS_RETURN_RETAINED
 #endif
 
-@class SBLockHardwareButtonActions; @class SpringBoard; @class SBSystemGestureManager; 
+@class SBSystemGestureManager; @class SpringBoard; @class SBLockHardwareButtonActions; @class BBServer; 
 static BOOL (*_logos_orig$_ungrouped$SpringBoard$_handlePhysicalButtonEvent$)(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL, UIPressesEvent *); static BOOL _logos_method$_ungrouped$SpringBoard$_handlePhysicalButtonEvent$(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL, UIPressesEvent *); static void (*_logos_orig$_ungrouped$SpringBoard$_simulateHomeButtonPress)(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$SpringBoard$_simulateHomeButtonPress(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST, SEL); static BOOL (*_logos_orig$_ungrouped$SBSystemGestureManager$isGestureWithTypeAllowed$)(_LOGOS_SELF_TYPE_NORMAL SBSystemGestureManager* _LOGOS_SELF_CONST, SEL, unsigned long long); static BOOL _logos_method$_ungrouped$SBSystemGestureManager$isGestureWithTypeAllowed$(_LOGOS_SELF_TYPE_NORMAL SBSystemGestureManager* _LOGOS_SELF_CONST, SEL, unsigned long long); static void (*_logos_orig$_ungrouped$SBLockHardwareButtonActions$performLongPressActions)(_LOGOS_SELF_TYPE_NORMAL SBLockHardwareButtonActions* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$SBLockHardwareButtonActions$performLongPressActions(_LOGOS_SELF_TYPE_NORMAL SBLockHardwareButtonActions* _LOGOS_SELF_CONST, SEL); 
 
-#line 61 "Tweak.x"
+#line 62 "Tweak.x"
 
 static BOOL _logos_method$_ungrouped$SpringBoard$_handlePhysicalButtonEvent$(_LOGOS_SELF_TYPE_NORMAL SpringBoard* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, UIPressesEvent * event) {
     if (splash.superview == nil) {
@@ -122,6 +123,17 @@ static void _logos_method$_ungrouped$SBLockHardwareButtonActions$performLongPres
 }
 
 
+static void (*_logos_orig$notifications$BBServer$publishBulletin$destinations$)(_LOGOS_SELF_TYPE_NORMAL BBServer* _LOGOS_SELF_CONST, SEL, id, unsigned long long); static void _logos_method$notifications$BBServer$publishBulletin$destinations$(_LOGOS_SELF_TYPE_NORMAL BBServer* _LOGOS_SELF_CONST, SEL, id, unsigned long long); 
+
+static void _logos_method$notifications$BBServer$publishBulletin$destinations$(_LOGOS_SELF_TYPE_NORMAL BBServer* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, id arg1, unsigned long long arg2) {
+  if (splash.superview == nil) {
+    _logos_orig$notifications$BBServer$publishBulletin$destinations$(self, _cmd, arg1, arg2);
+  }
+}
+
+
+
+
 @implementation ScreenFreezeActivatorListener
 -(void)activator:(LAActivator *)activator receiveEvent:(LAEvent *)event {
   blocktouches();
@@ -146,6 +158,12 @@ static void _logos_method$_ungrouped$SBLockHardwareButtonActions$performLongPres
 	return @"ScreenFreeze";
 }
 @end
-static __attribute__((constructor)) void _logosLocalInit() {
-{Class _logos_class$_ungrouped$SpringBoard = objc_getClass("SpringBoard"); { MSHookMessageEx(_logos_class$_ungrouped$SpringBoard, @selector(_handlePhysicalButtonEvent:), (IMP)&_logos_method$_ungrouped$SpringBoard$_handlePhysicalButtonEvent$, (IMP*)&_logos_orig$_ungrouped$SpringBoard$_handlePhysicalButtonEvent$);}{ MSHookMessageEx(_logos_class$_ungrouped$SpringBoard, @selector(_simulateHomeButtonPress), (IMP)&_logos_method$_ungrouped$SpringBoard$_simulateHomeButtonPress, (IMP*)&_logos_orig$_ungrouped$SpringBoard$_simulateHomeButtonPress);}Class _logos_class$_ungrouped$SBSystemGestureManager = objc_getClass("SBSystemGestureManager"); { MSHookMessageEx(_logos_class$_ungrouped$SBSystemGestureManager, @selector(isGestureWithTypeAllowed:), (IMP)&_logos_method$_ungrouped$SBSystemGestureManager$isGestureWithTypeAllowed$, (IMP*)&_logos_orig$_ungrouped$SBSystemGestureManager$isGestureWithTypeAllowed$);}Class _logos_class$_ungrouped$SBLockHardwareButtonActions = objc_getClass("SBLockHardwareButtonActions"); { MSHookMessageEx(_logos_class$_ungrouped$SBLockHardwareButtonActions, @selector(performLongPressActions), (IMP)&_logos_method$_ungrouped$SBLockHardwareButtonActions$performLongPressActions, (IMP*)&_logos_orig$_ungrouped$SBLockHardwareButtonActions$performLongPressActions);}} }
-#line 123 "Tweak.x"
+
+static __attribute__((constructor)) void _logosLocalCtor_28935dd4(int __unused argc, char __unused **argv, char __unused **envp) {
+	NSMutableDictionary *prefs = [NSMutableDictionary dictionaryWithContentsOfFile:@"/User/Library/Preferences/com.greg0109.screenfreezeprefs.plist"];
+	disablenotifications = prefs[@"disablenotifications"] ? [prefs[@"disablenotifications"] boolValue] : NO;
+  {Class _logos_class$_ungrouped$SpringBoard = objc_getClass("SpringBoard"); { MSHookMessageEx(_logos_class$_ungrouped$SpringBoard, @selector(_handlePhysicalButtonEvent:), (IMP)&_logos_method$_ungrouped$SpringBoard$_handlePhysicalButtonEvent$, (IMP*)&_logos_orig$_ungrouped$SpringBoard$_handlePhysicalButtonEvent$);}{ MSHookMessageEx(_logos_class$_ungrouped$SpringBoard, @selector(_simulateHomeButtonPress), (IMP)&_logos_method$_ungrouped$SpringBoard$_simulateHomeButtonPress, (IMP*)&_logos_orig$_ungrouped$SpringBoard$_simulateHomeButtonPress);}Class _logos_class$_ungrouped$SBSystemGestureManager = objc_getClass("SBSystemGestureManager"); { MSHookMessageEx(_logos_class$_ungrouped$SBSystemGestureManager, @selector(isGestureWithTypeAllowed:), (IMP)&_logos_method$_ungrouped$SBSystemGestureManager$isGestureWithTypeAllowed$, (IMP*)&_logos_orig$_ungrouped$SBSystemGestureManager$isGestureWithTypeAllowed$);}Class _logos_class$_ungrouped$SBLockHardwareButtonActions = objc_getClass("SBLockHardwareButtonActions"); { MSHookMessageEx(_logos_class$_ungrouped$SBLockHardwareButtonActions, @selector(performLongPressActions), (IMP)&_logos_method$_ungrouped$SBLockHardwareButtonActions$performLongPressActions, (IMP*)&_logos_orig$_ungrouped$SBLockHardwareButtonActions$performLongPressActions);}}
+  if (disablenotifications) {
+    {Class _logos_class$notifications$BBServer = objc_getClass("BBServer"); { MSHookMessageEx(_logos_class$notifications$BBServer, @selector(publishBulletin:destinations:), (IMP)&_logos_method$notifications$BBServer$publishBulletin$destinations$, (IMP*)&_logos_orig$notifications$BBServer$publishBulletin$destinations$);}}
+  }
+}
