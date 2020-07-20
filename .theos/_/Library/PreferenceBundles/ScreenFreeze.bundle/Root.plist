@@ -22,6 +22,18 @@
 			<key>label</key>
 			<string>Disable notifications when frozen</string>
 		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.greg0109.screenfreezeprefs</string>
+			<key>key</key>
+			<string>hideicon</string>
+			<key>label</key>
+			<string>Hide lock icon</string>
+		</dict>
 	</array>
 	<key>title</key>
 	<string>ScreenFreeze</string>

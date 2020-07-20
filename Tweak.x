@@ -29,6 +29,7 @@
 NSDate *lastVolumeDown;
 UIView *splash;
 BOOL disablenotifications;
+BOOL hideicon;
 
 void blocktouches() {
     //NSLog(@"PHOTOLOCK: Notification called");
@@ -44,6 +45,9 @@ void blocktouches() {
         splash = [[UIView alloc] initWithFrame:window.frame];
         [splash setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.05]];
         [splash addSubview:image];
+        if (hideicon) {
+          image.alpha = 0;
+        }
         [[[UIApplication sharedApplication] keyWindow].rootViewController.view addSubview:splash];
         splash.userInteractionEnabled = YES;
         splash.exclusiveTouch = YES;
@@ -136,6 +140,7 @@ void blocktouches() {
 %ctor {
 	NSMutableDictionary *prefs = [NSMutableDictionary dictionaryWithContentsOfFile:@"/User/Library/Preferences/com.greg0109.screenfreezeprefs.plist"];
 	disablenotifications = prefs[@"disablenotifications"] ? [prefs[@"disablenotifications"] boolValue] : NO;
+  hideicon = prefs[@"hideicon"] ? [prefs[@"hideicon"] boolValue] : NO;
   %init();
   if (disablenotifications) {
     %init(notifications);
